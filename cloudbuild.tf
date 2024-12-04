@@ -1,9 +1,3 @@
-# Provider configuration
-provider "google" {
-  project = "myfirstapp-72240"
-  region  = "northamerica-northeast2"
-}
-
 # Create a connection to GitHub
 resource "google_cloudbuildv2_connection" "github-connection" {
   location  = "northamerica-northeast2"

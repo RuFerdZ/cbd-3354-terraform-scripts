@@ -79,10 +79,16 @@ resource "google_sql_database_instance" "postgres_instance" {
   }
 }
 
-resource "google_sql_user" "postgres" {
-  name     = "postgres"
+# Create a database
+resource "google_sql_database" "myappdb" {
+  name     = "myappdb"
   instance = google_sql_database_instance.postgres_instance.name
-  password = var.postgres_password
+}
+
+# Cloud SQL database
+resource "google_sql_database" "default_db" {
+  name     = "assignment-02-database"
+  instance = google_sql_database_instance.postgres_instance.name
 }
 
 # Create a user
@@ -92,11 +98,12 @@ resource "google_sql_user" "myuser" {
   password = var.db_password
 }
 
-# Create a database
-resource "google_sql_database" "myappdb" {
-  name     = "myappdb"
+resource "google_sql_user" "postgres" {
+  name     = "postgres"
   instance = google_sql_database_instance.postgres_instance.name
+  password = var.postgres_password
 }
+
 
 # Script to run SQL commands for granting privileges and schema access
 resource "null_resource" "initialize_db" {
@@ -112,12 +119,6 @@ resource "null_resource" "initialize_db" {
   }
 }
 
-
-# Cloud SQL database
-resource "google_sql_database" "default_db" {
-  name     = "assignment-02-database"
-  instance = google_sql_database_instance.postgres_instance.name
-}
 
 # GKE Cluster
 resource "google_container_cluster" "gke_cluster" {
